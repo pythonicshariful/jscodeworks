@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>JS CodeWorks | Manage Statistics Metrics</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+<body class="admin-body">
+  <aside class="admin-sidebar">
+    <div class="admin-logo"><span style="color: var(--secondary);">JS</span> CODEWORKS</div>
+    <ul class="admin-menu">
+      <li><a href="{{ url_for('admin.dashboard') }}" class="admin-menu-link">📊 Dashboard</a></li>
+      <li><a href="{{ url_for('admin.manage_hero') }}" class="admin-menu-link">🚀 Hero Section</a></li>
+      <li><a href="{{ url_for('admin.manage_about') }}" class="admin-menu-link">ℹ️ About Studio</a></li>
+      <li><a href="{{ url_for('admin.manage_team') }}" class="admin-menu-link">👥 Founders & Team</a></li>
+      <li><a href="{{ url_for('admin.manage_services') }}" class="admin-menu-link">⚙️ Services Manager</a></li>
+      <li><a href="{{ url_for('admin.manage_projects') }}" class="admin-menu-link">📁 Projects Manager</a></li>
+      <li><a href="{{ url_for('admin.manage_stats') }}" class="admin-menu-link active">📈 Stats & Counter Rollup</a></li>
+      <li><a href="{{ url_for('admin.manage_contact_settings') }}" class="admin-menu-link">📞 Phone, Socials & Info</a></li>
+      <li><a href="{{ url_for('admin.manage_tech_stack') }}" class="admin-menu-link">🌐 3D Tech Orbit</a></li>
+      <li><a href="{{ url_for('admin.manage_messages') }}" class="admin-menu-link">📬 Contact Inbox</a></li>
+      <li><a href="{{ url_for('admin.manage_theme') }}" class="admin-menu-link">🎨 Theme & Animation</a></li>
+      <li><a href="{{ url_for('admin.manage_media') }}" class="admin-menu-link">🖼️ Media Library</a></li>
+      <li style="margin-top: auto;"><a href="{{ url_for('auth.logout') }}" class="admin-menu-link" style="color: #EF4444;">🚪 Logout</a></li>
+    </ul>
+  </aside>
+
+  <main class="admin-main">
+    <header class="admin-header">
+      <h1 class="admin-title">Statistics Metrics CMS Manager</h1>
+    </header>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for cat, msg in messages %}
+          <div style="padding: 12px; background: rgba(16,185,129,0.2); border: 1px solid #10B981; color: #fff; border-radius: 8px; margin-bottom: 24px;">✓ {{ msg }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div class="admin-card">
+      <h3 style="font-family: 'Space Grotesk'; margin-bottom: 20px;">Add / Edit Stat Metric</h3>
+      <form method="POST" action="{{ url_for('admin.manage_stats') }}">
+        <input type="hidden" name="metric_id" id="metric_id">
+
+        <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 20px;">
+          <div class="form-group">
+            <label class="form-label">Metric Label *</label>
+            <input type="text" name="label" class="form-input" placeholder="e.g. Projects Completed" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Target Number *</label>
+            <input type="number" name="value" class="form-input" placeholder="150" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Suffix (+, %, yrs)</label>
+            <input type="text" name="suffix" class="form-input" value="+">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Display Order</label>
+            <input type="number" name="order" class="form-input" value="1">
+          </div>
+        </div>
+
+        <button type="submit" class="btn-primary">Save Stat Metric 📈</button>
+      </form>
+    </div>
+
+    <!-- Existing Stats List -->
+    <div class="admin-card">
+      <h3 style="font-family: 'Space Grotesk'; margin-bottom: 20px;">Live Metrics Counter List</h3>
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Order</th>
+            <th>Label Description</th>
+            <th>Number Value</th>
+            <th>Suffix</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for st in stats_list %}
+          <tr>
+            <td>{{ st.order }}</td>
+            <td style="font-weight: 600;">{{ st.label }}</td>
+            <td style="color: var(--secondary); font-family: 'Space Grotesk'; font-size: 1.2rem; font-weight: 700;">{{ st.value }}</td>
+            <td><span class="tech-tag">{{ st.suffix }}</span></td>
+            <td>
+              <form method="POST" action="{{ url_for('admin.delete_stat', metric_id=st.id) }}" style="display: inline;" onsubmit="return confirm('Delete this metric?');">
+                <button type="submit" class="admin-btn btn-danger">Delete</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+  </main>
+</body>
+</html>

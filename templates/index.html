@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JS CodeWorks | Engineering Software Beyond Expectations</title>
+  <meta name="description" content="JS CodeWorks is a premier software development studio specializing in Python backends, AI Automation, WebGL 3D apps, SaaS, and Enterprise solutions. Founded by Jahidur Islam and Shariful Islam.">
+  <link rel="canonical" href="https://jscodeworks.com/">
+
+  <!-- OpenGraph Metadata for Social Sharing -->
+  <meta property="og:title" content="JS CodeWorks | Engineering Software Beyond Expectations">
+  <meta property="og:description" content="Software engineering agency building AI, WebGL 3D apps, Python backends, and Enterprise SaaS platforms. Founded by Jahidur Islam & Shariful Islam.">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80&fm=webp">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://jscodeworks.com/">
+
+  <!-- Twitter Card Metadata -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="JS CodeWorks | World-Class Software Agency">
+  <meta name="twitter:description" content="Intelligent software solutions engineered by Jahidur Islam & Shariful Islam.">
+  <meta name="twitter:image" content="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80&fm=webp">
+
+  <!-- Resource Performance Pre-fetching -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+
+  <!-- Schema.org JSON-LD Structured Data for SEO & Knowledge Graph -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "JS CodeWorks",
+    "url": "https://jscodeworks.com",
+    "logo": "https://jscodeworks.com/static/images/logo.png",
+    "description": "World-class software agency engineering Python backends, AI automation, WebGL 3D applications, and enterprise SaaS platforms.",
+    "founders": [
+      {
+        "@type": "Person",
+        "name": "Jahidur Islam",
+        "jobTitle": "CEO & Founder",
+        "sameAs": "https://github.com"
+      },
+      {
+        "@type": "Person",
+        "name": "Shariful Islam",
+        "jobTitle": "Co-Founder & Chief Technology Officer",
+        "sameAs": "https://linkedin.com"
+      }
+    ],
+    "knowsAbout": ["Custom Software Development", "Python Backends", "WebGL 3D", "AI Automation", "Enterprise ERP & CRM"]
+  }
+  </script>
+
+  <!-- Core Styles -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=7">
+  
+  <!-- Async CDNs for Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+</head>
+<body>
+
+  <!-- Custom Glowing Particle Cursor -->
+  <div id="custom-cursor"></div>
+
+  <!-- Audio Synth Toggle Badge -->
+  <button id="audio-toggle-btn" class="audio-toggle" title="Toggle Futuristic Audio Synth">
+    <div class="audio-pulse"></div>
+    <span class="audio-label">SOUND: ON</span>
+  </button>
+
+  <!-- Cinematic Loading Intro Screen -->
+  <div id="loader-screen">
+    <img src="{{ url_for('static', filename='images/logo.png') }}?v=7" alt="JS CodeWorks Logo" style="height: 60px; width: auto; margin-bottom: 24px; filter: drop-shadow(0 0 15px rgba(6,182,212,0.6));">
+    <div class="loader-logo">JS CODEWORKS</div>
+    <div class="loader-progress-bar">
+      <div class="loader-progress-fill"></div>
+    </div>
+    <div class="loader-text">Initializing JS CodeWorks...</div>
+  </div>
+
+  <!-- Transparent Glass Navigation Bar -->
+  <nav class="navbar">
+    <a href="#" class="nav-brand">
+      <img src="{{ url_for('static', filename='images/logo.png') }}?v=7" alt="JS CodeWorks Logo" class="nav-brand-logo-img">
+      <div class="nav-brand-text">JS <span>CODEWORKS</span></div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#about" class="nav-link">About</a></li>
+      <li><a href="#services" class="nav-link">Services</a></li>
+      <li><a href="#portfolio" class="nav-link">Portfolio</a></li>
+      <li><a href="#tech-stack" class="nav-link">Tech Stack</a></li>
+      <li><a href="#blog" class="nav-link">Blog</a></li>
+      <li><a href="#contact" class="nav-link">Contact</a></li>
+    </ul>
+    <a href="#contact" class="btn-primary">Get Free Consultation</a>
+  </nav>
+
+  <!-- 3D Developer Workspace Hero Section -->
+  <section id="hero-section">
+    <div id="canvas-3d-workspace"></div>
+
+    <div class="hero-content">
+      <div class="badge">✦ {{ hero.badge_text if hero else "Next-Gen Software Studio" }}</div>
+      <h1 class="hero-headline">{{ hero.headline if hero else "Engineering Software Beyond Expectations" }}</h1>
+      <p class="hero-subheadline">{{ hero.subheadline if hero else "We build intelligent software solutions that transform visionary ideas into powerful digital products." }}</p>
+      
+      <div class="hero-actions">
+        <a href="{{ hero.cta_primary_link if hero else '#contact' }}" class="btn-primary">
+          {{ hero.cta_primary_text if hero else "Start Your Project" }} ➔
+        </a>
+        <a href="{{ hero.cta_secondary_link if hero else '#portfolio' }}" class="btn-secondary">
+          {{ hero.cta_secondary_text if hero else "Explore Portfolio" }}
+        </a>
+      </div>
+    </div>
+
+    <!-- Floating Live Python Matrix Box -->
+    <div class="hero-code-box">
+      <div class="code-header">
+        <div class="code-dots">
+          <div class="code-dot red"></div>
+          <div class="code-dot yellow"></div>
+          <div class="code-dot green"></div>
+        </div>
+        <span>engine_core.py</span>
+      </div>
+      <pre><code>{% for line in hero_code %}{{ line }}
+{% endfor %}</code></pre>
+    </div>
+  </section>
+
+  <!-- About Section with 3D Cyber Core Canvas -->
+  <section id="about" class="section">
+    <div id="canvas-3d-about" class="section-3d-bg"></div>
+
+    <div class="section-header" style="position: relative; z-index: 5;">
+      <span class="section-tag">// OUR VISION & FOUNDERS</span>
+      <h2 class="section-title">{{ about.title if about else "Where World-Class Code Meets Futuristic Design" }}</h2>
+      <p class="section-subtitle">{{ about.story if about else "JS CodeWorks was founded by Jahidur Islam and Shariful Islam with a singular relentless vision to build extraordinary software." }}</p>
+    </div>
+
+    <!-- Core Values Cards -->
+    <div class="services-grid" style="margin-bottom: 80px; position: relative; z-index: 5;">
+      {% for val in core_values %}
+      <div class="glass-panel service-card">
+        <div class="service-icon-wrapper">✦</div>
+        <h3 class="service-title">{{ val.title }}</h3>
+        <p class="service-desc">{{ val.desc }}</p>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Timeline 3D Animation Container -->
+    <div style="position: relative;">
+      <div id="canvas-3d-timeline"></div>
+
+      <div class="section-header" style="position: relative; z-index: 5;">
+        <span class="section-tag">// MILESTONES & JOURNEY</span>
+        <h2 class="section-title">Execution Process Timeline</h2>
+      </div>
+
+      <div class="timeline-container">
+        <div class="timeline-line"></div>
+        <div class="timeline-line-fill"></div>
+        {% for item in timeline %}
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="glass-panel timeline-content">
+            <div style="color: var(--secondary); font-family: var(--font-code); font-weight: 700; margin-bottom: 6px;">{{ item.year }}</div>
+            <h4 style="font-family: var(--font-heading); font-size: 1.2rem; margin-bottom: 8px;">{{ item.title }}</h4>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">{{ item.desc }}</p>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <!-- Services Section with 3D Floating Matrices Canvas -->
+  <section id="services" class="section" style="background: rgba(3, 6, 18, 0.6);">
+    <div id="canvas-3d-services" class="section-3d-bg"></div>
+
+    <div class="section-header" style="position: relative; z-index: 5;">
+      <span class="section-tag">// CAPABILITIES</span>
+      <h2 class="section-title">Engineered Capabilities & Services</h2>
+      <p class="section-subtitle">Comprehensive software engineering suites tailored for startups, enterprise platforms, and futuristic digital products.</p>
+    </div>
+
+    <div class="services-grid" style="position: relative; z-index: 5;">
+      {% for svc in services %}
+      <div class="glass-panel service-card" style="--glow-color: {{ svc.border_glow_color }};">
+        <div class="service-icon-wrapper">⚙</div>
+        <h3 class="service-title">{{ svc.title }}</h3>
+        <p class="service-desc">{{ svc.short_desc }}</p>
+
+        {% if svc.capabilities_json %}
+        <ul class="service-caps">
+          {% for cap in json.loads(svc.capabilities_json) %}
+          <li class="service-cap-item">{{ cap }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- Portfolio Section with 3D Particle Streams Canvas -->
+  <section id="portfolio" class="section">
+    <div id="canvas-3d-portfolio" class="section-3d-bg"></div>
+
+    <div class="section-header" style="position: relative; z-index: 5;">
+      <span class="section-tag">// FEATURED PROJECTS</span>
+      <h2 class="section-title">Portfolio of Engineering Excellence</h2>
+      <p class="section-subtitle">Explore a selection of high-impact platforms built by the JS CodeWorks engineering team.</p>
+    </div>
+
+    <div class="portfolio-grid" style="position: relative; z-index: 5;">
+      {% for proj in projects %}
+      <div class="glass-panel project-card">
+        <div class="project-media-wrapper">
+          <img src="{{ proj.image_url }}" alt="{{ proj.title }}" class="project-img" loading="lazy">
+        </div>
+        <div class="project-body">
+          <span class="project-category">{{ proj.category }}</span>
+          <h3 class="project-title">{{ proj.title }}</h3>
+          <p class="project-tagline">{{ proj.tagline }}</p>
+          
+          {% if proj.tech_stack_json %}
+          <div class="project-tech-tags">
+            {% for t in json.loads(proj.tech_stack_json) %}
+            <span class="tech-tag">{{ t }}</span>
+            {% endfor %}
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- 3D Technology Orbit Stack Section -->
+  <section id="tech-stack" class="section" style="background: rgba(3, 6, 18, 0.8);">
+    <div class="section-header" style="position: relative; z-index: 5;">
+      <span class="section-tag">// TECHNOLOGY STACK SPHERE</span>
+      <h2 class="section-title">Orbiting Technology Ecosystem</h2>
+      <p class="section-subtitle">Rotate and explore our modern technology stack powering low-latency systems and beautiful digital interfaces.</p>
+    </div>
+
+    <div id="tech-sphere-container">
+      <!-- 3D Canvas dynamically rendered by tech-sphere.js -->
+    </div>
+  </section>
+
+  <!-- Animated Statistics Metric Rollup (Fully Dynamic from Admin CMS) -->
+  <section class="section" style="padding: 60px 5%;">
+    <div class="stats-grid" style="position: relative; z-index: 5;">
+      {% for st in stats %}
+      <div class="glass-panel stat-card">
+        <div class="stat-number" data-target="{{ st.value }}">0</div>
+        <div class="stat-label">{{ st.label }} {{ st.suffix }}</div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- Founders & Leadership Section with Dynamic Header & Roster -->
+  <section id="team" class="section">
+    <div id="canvas-3d-team" class="section-3d-bg"></div>
+
+    <div class="section-header" style="position: relative; z-index: 5;">
+      <span class="section-tag">{{ about.team_section_tag if about and about.team_section_tag else "// FOUNDERS & LEADERSHIP" }}</span>
+      <h2 class="section-title">{{ about.team_section_title if about and about.team_section_title else "The Engineering Architects" }}</h2>
+      <p class="section-subtitle">Led by founders Jahidur Islam & Shariful Islam, committed to software mastery and client satisfaction.</p>
+    </div>
+
+    <div class="team-grid" style="position: relative; z-index: 5;">
+      {% for tm in team_members %}
+      <div class="glass-panel team-card">
+        <img src="{{ tm.image_url }}" alt="{{ tm.name }} - {{ tm.role }}" class="team-avatar" loading="lazy">
+        <h3 class="team-name">{{ tm.name }}</h3>
+        <div class="team-role">{{ tm.role }}</div>
+        <p class="team-bio">{{ tm.bio }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- Testimonials Section -->
+  <section class="section" style="background: rgba(3, 6, 18, 0.7);">
+    <div class="section-header" style="position: relative; z-index: 5;">
+      <span class="section-tag">// CLIENT REVIEWS</span>
+      <h2 class="section-title">Trusted By Global Leaders</h2>
+    </div>
+
+    <div class="services-grid" style="position: relative; z-index: 5;">
+      {% for test in testimonials %}
+      <div class="glass-panel service-card">
+        <div style="color: #F59E0B; margin-bottom: 12px; font-size: 1.1rem;">★★★★★</div>
+        <p style="font-style: italic; color: var(--text-muted); margin-bottom: 20px; font-size: 0.95rem;">"{{ test.content }}"</p>
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <img src="{{ test.photo_url }}" alt="{{ test.client_name }}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;" loading="lazy">
+          <div>
+            <div style="font-weight: 600; font-size: 0.95rem;">{{ test.client_name }}</div>
+            <div style="color: var(--text-dim); font-size: 0.8rem;">{{ test.role }}, {{ test.company }}</div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- Blog Preview Section -->
+  <section id="blog" class="section">
+    <div class="section-header" style="position: relative; z-index: 5;">
+      <span class="section-tag">// LATEST INSIGHTS</span>
+      <h2 class="section-title">Engineering Insights & Publications</h2>
+    </div>
+
+    <div class="portfolio-grid" style="position: relative; z-index: 5;">
+      {% for bp in blogs %}
+      <div class="glass-panel project-card">
+        <div class="project-media-wrapper">
+          <img src="{{ bp.cover_image }}" alt="{{ bp.title }}" class="project-img" loading="lazy">
+        </div>
+        <div class="project-body">
+          <span class="project-category">{{ bp.category }} • {{ bp.read_time }}</span>
+          <h3 class="project-title" style="font-size: 1.2rem;">{{ bp.title }}</h3>
+          <p class="project-tagline" style="font-size: 0.88rem;">{{ bp.excerpt }}</p>
+          <div style="margin-top: auto; color: var(--secondary); font-weight: 600; font-size: 0.85rem;">Read Full Article ➔</div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- Contact & Consultation Section with Dynamic Phone, Email & WhatsApp -->
+  <section id="contact" class="section" style="background: rgba(3, 6, 18, 0.9);">
+    <div id="canvas-3d-contact" class="section-3d-bg"></div>
+
+    <div class="section-header" style="position: relative; z-index: 5;">
+      <span class="section-tag">// INITIATE PROJECT</span>
+      <h2 class="section-title">Let's Build Something World-Class</h2>
+      <p class="section-subtitle">Reach out to our engineering directors to discuss your software project requirements.</p>
+    </div>
+
+    <div class="contact-wrapper" style="position: relative; z-index: 5;">
+      <div class="glass-panel contact-form-card">
+        <form id="contact-form">
+          <div class="form-group">
+            <label class="form-label">Full Name *</label>
+            <input type="text" name="name" class="form-input" placeholder="e.g. Alex Morgan" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Business Email *</label>
+            <input type="email" name="email" class="form-input" placeholder="e.g. alex@company.com" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Service Interest</label>
+            <select name="service_interest" class="form-select">
+              <option value="Custom Software Development">Custom Software Development</option>
+              <option value="Web Application Development">Web Application Development</option>
+              <option value="Mobile App Development">Mobile App Development</option>
+              <option value="AI & Workflow Automation">AI & Workflow Automation</option>
+              <option value="SaaS Platform Development">SaaS Platform Development</option>
+              <option value="UI/UX Design Studio">UI/UX Design Studio</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Project Details & Objectives *</label>
+            <textarea name="message" class="form-textarea" placeholder="Describe your vision, scope, timeline, and tech requirements..." required></textarea>
+          </div>
+
+          <button type="submit" class="btn-primary" style="width: 100%; justify-content: center;">
+            Transmit Project Scope ➔
+          </button>
+          <div id="contact-status"></div>
+        </form>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 24px; justify-content: center;">
+        <div class="glass-panel" style="padding: 30px;">
+          <h3 style="font-family: var(--font-heading); margin-bottom: 12px; font-size: 1.2rem;">Founders Direct Communication</h3>
+          <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 12px;">Speak directly with founders Jahidur Islam & Shariful Islam.</p>
+          <div style="font-family: var(--font-code); color: var(--secondary); font-size: 0.95rem; margin-bottom: 6px;">📧 {{ contact_settings.email if contact_settings else 'contact@jscodeworks.com' }}</div>
+          {% if contact_settings and contact_settings.phone %}
+          <div style="font-family: var(--font-code); color: #10B981; font-size: 0.95rem;">📞 {{ contact_settings.phone }}</div>
+          {% endif %}
+        </div>
+
+        <div class="glass-panel" style="padding: 30px;">
+          <h3 style="font-family: var(--font-heading); margin-bottom: 12px; font-size: 1.2rem;">Global Headquarters</h3>
+          <p style="color: var(--text-muted); font-size: 0.9rem;">{{ contact_settings.office_address if contact_settings else 'High-Tech Software Development Hub, Dhaka & Global Remote Engineering Teams' }}</p>
+        </div>
+
+        {% set wa_num = contact_settings.whatsapp_number.replace('+', '').replace(' ', '') if contact_settings and contact_settings.whatsapp_number else '' %}
+        <a href="https://wa.me/{{ wa_num }}" target="_blank" class="btn-secondary" style="justify-content: center;">
+          💬 WhatsApp Instant Chat
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer with Dynamic Social Media Links -->
+  <footer>
+    <div class="footer-content" style="grid-template-columns: 2fr 1fr 1fr 1fr;">
+      <div>
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+          <img src="{{ url_for('static', filename='images/logo.png') }}?v=7" alt="JS CodeWorks Logo" style="height: 38px; width: auto;">
+          <div class="footer-brand" style="margin-bottom: 0;">JS CODEWORKS</div>
+        </div>
+        <p class="footer-desc">Next-Gen software development agency engineering intelligent, scalable, and visually stunning digital products.</p>
+      </div>
+      <div>
+        <h4 style="font-family: var(--font-heading); margin-bottom: 16px;">Services</h4>
+        <ul style="list-style: none; display: flex; flex-direction: column; gap: 8px; color: var(--text-muted); font-size: 0.9rem;">
+          <li>Custom Software Development</li>
+          <li>Web & Mobile Applications</li>
+          <li>AI & Automation Systems</li>
+          <li>Enterprise ERP & Cloud Solutions</li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="font-family: var(--font-heading); margin-bottom: 16px;">Navigation</h4>
+        <ul style="list-style: none; display: flex; flex-direction: column; gap: 8px; color: var(--text-muted); font-size: 0.9rem;">
+          <li><a href="#about" style="color: inherit; text-decoration: none;">About Studio</a></li>
+          <li><a href="#services" style="color: inherit; text-decoration: none;">Services</a></li>
+          <li><a href="#portfolio" style="color: inherit; text-decoration: none;">Portfolio</a></li>
+          <li><a href="#contact" style="color: inherit; text-decoration: none;">Get In Touch</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="font-family: var(--font-heading); margin-bottom: 16px;">Connect</h4>
+        <ul style="list-style: none; display: flex; flex-direction: column; gap: 8px; color: var(--secondary); font-size: 0.9rem;">
+          {% if contact_settings and contact_settings.github_url %}<li><a href="{{ contact_settings.github_url }}" target="_blank" style="color: inherit; text-decoration: none;">GitHub</a></li>{% endif %}
+          {% if contact_settings and contact_settings.linkedin_url %}<li><a href="{{ contact_settings.linkedin_url }}" target="_blank" style="color: inherit; text-decoration: none;">LinkedIn</a></li>{% endif %}
+          {% if contact_settings and contact_settings.twitter_url %}<li><a href="{{ contact_settings.twitter_url }}" target="_blank" style="color: inherit; text-decoration: none;">Twitter / X</a></li>{% endif %}
+          {% if contact_settings and contact_settings.facebook_url %}<li><a href="{{ contact_settings.facebook_url }}" target="_blank" style="color: inherit; text-decoration: none;">Facebook</a></li>{% endif %}
+          {% if contact_settings and contact_settings.instagram_url %}<li><a href="{{ contact_settings.instagram_url }}" target="_blank" style="color: inherit; text-decoration: none;">Instagram</a></li>{% endif %}
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div>© 2026 JS CodeWorks. Engineered by Jahidur Islam & Shariful Islam.</div>
+      <div>Software Engineering Agency</div>
+    </div>
+  </footer>
+
+  <!-- Application Scripts -->
+  <script src="{{ url_for('static', filename='js/three-scene.js') }}?v=7"></script>
+  <script src="{{ url_for('static', filename='js/timeline-3d.js') }}?v=7"></script>
+  <script src="{{ url_for('static', filename='js/sections-3d.js') }}?v=7"></script>
+  <script src="{{ url_for('static', filename='js/tech-sphere.js') }}?v=7"></script>
+  <script src="{{ url_for('static', filename='js/animations.js') }}?v=7"></script>
+  <script src="{{ url_for('static', filename='js/cursor.js') }}?v=7"></script>
+  <script src="{{ url_for('static', filename='js/audio.js') }}?v=7"></script>
+  <script src="{{ url_for('static', filename='js/main.js') }}?v=7"></script>
+</body>
+</html>

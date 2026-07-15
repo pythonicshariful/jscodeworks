@@ -1,0 +1,145 @@
+/* Cyberpunk Glassmorphism Admin Panel Styling */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@600;700&display=swap');
+
+:root {
+  --admin-bg: #030612;
+  --admin-sidebar: #060a1e;
+  --admin-card: rgba(15, 23, 42, 0.75);
+  --admin-accent: #06B6D4;
+  --admin-primary: #2563EB;
+  --admin-border: rgba(255, 255, 255, 0.12);
+}
+
+body.admin-body {
+  background-color: var(--admin-bg);
+  color: #F8FAFC;
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  display: flex;
+  min-height: 100vh;
+}
+
+.admin-sidebar {
+  width: 260px;
+  background: var(--admin-sidebar);
+  border-right: 1px solid var(--admin-border);
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.admin-logo {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 32px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.admin-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.admin-menu-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  color: #94A3B8;
+  text-decoration: none;
+  font-size: 0.92rem;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.admin-menu-link:hover, .admin-menu-link.active {
+  background: rgba(6, 182, 212, 0.15);
+  color: var(--admin-accent);
+  border: 1px solid rgba(6, 182, 212, 0.3);
+}
+
+.admin-main {
+  margin-left: 260px;
+  flex-grow: 1;
+  padding: 40px;
+  min-height: 100vh;
+}
+
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--admin-border);
+}
+
+.admin-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.admin-card {
+  background: var(--admin-card);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--admin-border);
+  border-radius: 12px;
+  padding: 28px;
+  margin-bottom: 24px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  color: #F8FAFC;
+  font-size: 0.9rem;
+}
+
+.admin-table th, .admin-table td {
+  padding: 14px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--admin-border);
+}
+
+.admin-table th {
+  background: rgba(255, 255, 255, 0.04);
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--admin-accent);
+}
+
+.admin-btn {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  font-size: 0.85rem;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-cyan {
+  background: var(--admin-accent);
+  color: #000;
+}
+
+.btn-danger {
+  background: #EF4444;
+  color: #fff;
+}

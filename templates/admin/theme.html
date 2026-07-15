@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>JS CodeWorks | Theme & 3D Animation Preferences</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+<body class="admin-body">
+  <aside class="admin-sidebar">
+    <div class="admin-logo"><span style="color: var(--secondary);">JS</span> CODEWORKS</div>
+    <ul class="admin-menu">
+      <li><a href="{{ url_for('admin.dashboard') }}" class="admin-menu-link">📊 Dashboard</a></li>
+      <li><a href="{{ url_for('admin.manage_hero') }}" class="admin-menu-link">🚀 Hero Section</a></li>
+      <li><a href="{{ url_for('admin.manage_about') }}" class="admin-menu-link">ℹ️ About Studio</a></li>
+      <li><a href="{{ url_for('admin.manage_team') }}" class="admin-menu-link">👥 Founders & Team</a></li>
+      <li><a href="{{ url_for('admin.manage_services') }}" class="admin-menu-link">⚙️ Services Manager</a></li>
+      <li><a href="{{ url_for('admin.manage_projects') }}" class="admin-menu-link">📁 Projects Manager</a></li>
+      <li><a href="{{ url_for('admin.manage_stats') }}" class="admin-menu-link">📈 Stats & Counter Rollup</a></li>
+      <li><a href="{{ url_for('admin.manage_contact_settings') }}" class="admin-menu-link">📞 Phone, Socials & Info</a></li>
+      <li><a href="{{ url_for('admin.manage_tech_stack') }}" class="admin-menu-link">🌐 3D Tech Orbit</a></li>
+      <li><a href="{{ url_for('admin.manage_messages') }}" class="admin-menu-link">📬 Contact Inbox</a></li>
+      <li><a href="{{ url_for('admin.manage_theme') }}" class="admin-menu-link active">🎨 Theme & Animation</a></li>
+      <li><a href="{{ url_for('admin.manage_media') }}" class="admin-menu-link">🖼️ Media Library</a></li>
+      <li style="margin-top: auto;"><a href="{{ url_for('auth.logout') }}" class="admin-menu-link" style="color: #EF4444;">🚪 Logout</a></li>
+    </ul>
+  </aside>
+
+  <main class="admin-main">
+    <header class="admin-header">
+      <h1 class="admin-title">Theme System & 3D Engine Preferences</h1>
+    </header>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for cat, msg in messages %}
+          <div style="padding: 12px; background: rgba(16,185,129,0.2); border: 1px solid #10B981; color: #fff; border-radius: 8px; margin-bottom: 24px;">✓ {{ msg }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div class="admin-card">
+      <form method="POST" action="{{ url_for('admin.manage_theme') }}">
+        <h3 style="font-family: 'Space Grotesk'; margin-bottom: 20px; color: var(--secondary);">Color Tokens & Visual Theme</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 20px; margin-bottom: 30px;">
+          <div class="form-group">
+            <label class="form-label">Background Dark Base</label>
+            <input type="color" name="bg_color" class="form-input" value="{{ theme.bg_color }}">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Primary Royal Blue</label>
+            <input type="color" name="primary_color" class="form-input" value="{{ theme.primary_color }}">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Secondary Neon Cyan</label>
+            <input type="color" name="secondary_color" class="form-input" value="{{ theme.secondary_color }}">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Accent Electric Purple</label>
+            <input type="color" name="accent_color" class="form-input" value="{{ theme.accent_color }}">
+          </div>
+        </div>
+
+        <h3 style="font-family: 'Space Grotesk'; margin-bottom: 20px; color: var(--secondary);">3D WebGL Engine Physics</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 30px;">
+          <div class="form-group">
+            <label class="form-label">Particle Cloud Density</label>
+            <input type="number" name="particle_density" class="form-input" value="{{ animation.particle_density }}">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Camera Orbital Speed Scale</label>
+            <input type="number" step="0.1" name="camera_speed" class="form-input" value="{{ animation.camera_speed }}">
+          </div>
+          <div class="form-group" style="display: flex; align-items: center; gap: 8px; margin-top: 24px;">
+            <input type="checkbox" name="sound_enabled" id="sound_enabled" value="1" {% if animation.sound_enabled %}checked{% endif %}>
+            <label for="sound_enabled" class="form-label" style="margin: 0;">Enable Audio Synth</label>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-primary">Save Engine Preferences 🎨</button>
+      </form>
+    </div>
+  </main>
+</body>
+</html>

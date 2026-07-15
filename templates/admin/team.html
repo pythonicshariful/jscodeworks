@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>JS CodeWorks | Manage Founders & Team</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+<body class="admin-body">
+  <aside class="admin-sidebar">
+    <div class="admin-logo"><span style="color: var(--secondary);">JS</span> CODEWORKS</div>
+    <ul class="admin-menu">
+      <li><a href="{{ url_for('admin.dashboard') }}" class="admin-menu-link">📊 Dashboard</a></li>
+      <li><a href="{{ url_for('admin.manage_hero') }}" class="admin-menu-link">🚀 Hero Section</a></li>
+      <li><a href="{{ url_for('admin.manage_about') }}" class="admin-menu-link">ℹ️ About Studio</a></li>
+      <li><a href="{{ url_for('admin.manage_team') }}" class="admin-menu-link active">👥 Founders & Team</a></li>
+      <li><a href="{{ url_for('admin.manage_services') }}" class="admin-menu-link">⚙️ Services Manager</a></li>
+      <li><a href="{{ url_for('admin.manage_projects') }}" class="admin-menu-link">📁 Projects Manager</a></li>
+      <li><a href="{{ url_for('admin.manage_stats') }}" class="admin-menu-link">📈 Stats & Counter Rollup</a></li>
+      <li><a href="{{ url_for('admin.manage_contact_settings') }}" class="admin-menu-link">📞 Phone, Socials & Info</a></li>
+      <li><a href="{{ url_for('admin.manage_tech_stack') }}" class="admin-menu-link">🌐 3D Tech Orbit</a></li>
+      <li><a href="{{ url_for('admin.manage_messages') }}" class="admin-menu-link">📬 Contact Inbox</a></li>
+      <li><a href="{{ url_for('admin.manage_theme') }}" class="admin-menu-link">🎨 Theme & Animation</a></li>
+      <li><a href="{{ url_for('admin.manage_media') }}" class="admin-menu-link">🖼️ Media Library</a></li>
+      <li style="margin-top: auto;"><a href="{{ url_for('auth.logout') }}" class="admin-menu-link" style="color: #EF4444;">🚪 Logout</a></li>
+    </ul>
+  </aside>
+
+  <main class="admin-main">
+    <header class="admin-header">
+      <h1 class="admin-title">Founders & Leadership CMS Manager</h1>
+    </header>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for cat, msg in messages %}
+          <div style="padding: 12px; background: rgba(16,185,129,0.2); border: 1px solid #10B981; color: #fff; border-radius: 8px; margin-bottom: 24px;">✓ {{ msg }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <!-- Team Section Header CMS Settings -->
+    <div class="admin-card">
+      <h3 style="font-family: 'Space Grotesk'; margin-bottom: 20px; color: var(--secondary);">Edit Section Header & Tagline</h3>
+      <form method="POST" action="{{ url_for('admin.manage_team') }}">
+        <input type="hidden" name="action_type" value="section_header">
+        
+        <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 20px;">
+          <div class="form-group">
+            <label class="form-label">Section Tagline</label>
+            <input type="text" name="team_section_tag" class="form-input" value="{{ about.team_section_tag or '// FOUNDERS & LEADERSHIP' }}">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Section Main Title</label>
+            <input type="text" name="team_section_title" class="form-input" value="{{ about.team_section_title or 'The Engineering Architects' }}" required>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-primary">Update Section Header 💾</button>
+      </form>
+    </div>
+
+    <!-- Founder & Team Member CRUD Form -->
+    <div class="admin-card" id="member-form-card">
+      <h3 id="form-heading" style="font-family: 'Space Grotesk'; margin-bottom: 20px; color: var(--secondary);">Add New Founder / Team Member Profile</h3>
+      <form method="POST" action="{{ url_for('admin.manage_team') }}" enctype="multipart/form-data">
+        <input type="hidden" name="action_type" value="member">
+        <input type="hidden" name="member_id" id="member_id">
+
+        <div style="display: grid; grid-template-columns: 2fr 2fr 1fr 1fr; gap: 20px;">
+          <div class="form-group">
+            <label class="form-label">Full Name *</label>
+            <input type="text" name="name" id="form_name" class="form-input" placeholder="e.g. Jahidur Islam" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Role Title *</label>
+            <input type="text" name="role" id="form_role" class="form-input" placeholder="e.g. CEO & Founder" required>
+          </div>
+          <div class="form-group" style="display: flex; align-items: center; gap: 8px; margin-top: 24px;">
+            <input type="checkbox" name="is_founder" id="form_founder" value="1" checked>
+            <label for="form_founder" class="form-label" style="margin: 0;">Is Founder?</label>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Order</label>
+            <input type="number" name="order" id="form_order" class="form-input" value="1">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Bio / Profile Narrative *</label>
+          <textarea name="bio" id="form_bio" class="form-textarea" required></textarea>
+        </div>
+
+        <!-- Profile Picture Input Options (File Upload + Image URL) -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; background: rgba(255,255,255,0.02); padding: 16px; border-radius: 8px; border: 1px dashed rgba(6,182,212,0.3);">
+          <div class="form-group" style="margin: 0;">
+            <label class="form-label">📷 Upload Profile Picture File (from PC)</label>
+            <input type="file" name="image_file" id="form_image_file" class="form-input" accept="image/*">
+          </div>
+          <div class="form-group" style="margin: 0;">
+            <label class="form-label">🔗 Or Profile Picture Image URL</label>
+            <input type="text" name="image_url" id="form_image_url" class="form-input" placeholder="https://images.unsplash.com/...">
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px;">
+          <div class="form-group">
+            <label class="form-label">GitHub URL</label>
+            <input type="text" name="social_github" id="form_github" class="form-input" placeholder="https://github.com/username">
+          </div>
+          <div class="form-group">
+            <label class="form-label">LinkedIn URL</label>
+            <input type="text" name="social_linkedin" id="form_linkedin" class="form-input" placeholder="https://linkedin.com/in/username">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Twitter URL</label>
+            <input type="text" name="social_twitter" id="form_twitter" class="form-input" placeholder="https://twitter.com/username">
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 12px; margin-top: 10px;">
+          <button type="submit" class="btn-primary">Save Profile & Picture 💾</button>
+          <button type="button" class="btn-secondary" onclick="resetTeamForm()">Reset / Clear Form</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Existing Team Roster Table -->
+    <div class="admin-card">
+      <h3 style="font-family: 'Space Grotesk'; margin-bottom: 20px;">Founders & Leadership Roster</h3>
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Photo</th>
+            <th>Name</th>
+            <th>Role Title</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for tm in team_members %}
+          {% set socials = json.loads(tm.social_links_json) if tm.social_links_json else {} %}
+          <tr>
+            <td><img src="{{ tm.image_url }}" alt="{{ tm.name }}" style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 1px solid var(--secondary);"></td>
+            <td style="font-weight: 600;">{{ tm.name }}</td>
+            <td><span class="tech-tag">{{ tm.role }}</span></td>
+            <td>
+              {% if tm.is_founder %}
+              <span style="color: #10B981; font-family: 'JetBrains Mono'; font-weight: 700; font-size: 0.8rem;">FOUNDER</span>
+              {% else %}
+              <span style="color: #94A3B8; font-size: 0.8rem;">TEAM</span>
+              {% endif %}
+            </td>
+            <td>
+              <button type="button" class="admin-btn btn-cyan" onclick="editTeamMember({{ tm.id }}, `{{ tm.name }}`, `{{ tm.role }}`, {{ 1 if tm.is_founder else 0 }}, {{ tm.order }}, `{{ tm.bio|escape }}`, `{{ tm.image_url }}`, `{{ socials.get('github', '') }}`, `{{ socials.get('linkedin', '') }}`, `{{ socials.get('twitter', '') }}`)">✏️ Edit Profile</button>
+              <form method="POST" action="{{ url_for('admin.delete_team_member', member_id=tm.id) }}" style="display: inline;" onsubmit="return confirm('Remove profile for {{ tm.name }}?');">
+                <button type="submit" class="admin-btn btn-danger">Delete</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+  </main>
+
+  <script>
+    function editTeamMember(id, name, role, isFounder, order, bio, imageUrl, github, linkedin, twitter) {
+      document.getElementById('member_id').value = id;
+      document.getElementById('form_name').value = name;
+      document.getElementById('form_role').value = role;
+      document.getElementById('form_founder').checked = (isFounder === 1);
+      document.getElementById('form_order').value = order;
+      document.getElementById('form_bio').value = bio;
+      document.getElementById('form_image_url').value = imageUrl;
+      document.getElementById('form_github').value = github;
+      document.getElementById('form_linkedin').value = linkedin;
+      document.getElementById('form_twitter').value = twitter;
+
+      document.getElementById('form-heading').innerText = "Edit Member Profile: " + name;
+      document.getElementById('member-form-card').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function resetTeamForm() {
+      document.getElementById('member_id').value = '';
+      document.getElementById('form_name').value = '';
+      document.getElementById('form_role').value = '';
+      document.getElementById('form_founder').checked = true;
+      document.getElementById('form_order').value = '1';
+      document.getElementById('form_bio').value = '';
+      document.getElementById('form_image_url').value = '';
+      document.getElementById('form_image_file').value = '';
+      document.getElementById('form_github').value = '';
+      document.getElementById('form_linkedin').value = '';
+      document.getElementById('form_twitter').value = '';
+
+      document.getElementById('form-heading').innerText = "Add New Founder / Team Member Profile";
+    }
+  </script>
+</body>
+</html>

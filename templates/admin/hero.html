@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>JS CodeWorks | Manage Hero Section</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+<body class="admin-body">
+  <aside class="admin-sidebar">
+    <div class="admin-logo"><span style="color: var(--secondary);">JS</span> CODEWORKS</div>
+    <ul class="admin-menu">
+      <li><a href="{{ url_for('admin.dashboard') }}" class="admin-menu-link">📊 Dashboard</a></li>
+      <li><a href="{{ url_for('admin.manage_hero') }}" class="admin-menu-link active">🚀 Hero Section</a></li>
+      <li><a href="{{ url_for('admin.manage_about') }}" class="admin-menu-link">ℹ️ About Studio</a></li>
+      <li><a href="{{ url_for('admin.manage_team') }}" class="admin-menu-link">👥 Founders & Team</a></li>
+      <li><a href="{{ url_for('admin.manage_services') }}" class="admin-menu-link">⚙️ Services Manager</a></li>
+      <li><a href="{{ url_for('admin.manage_projects') }}" class="admin-menu-link">📁 Projects Manager</a></li>
+      <li><a href="{{ url_for('admin.manage_stats') }}" class="admin-menu-link">📈 Stats & Counter Rollup</a></li>
+      <li><a href="{{ url_for('admin.manage_contact_settings') }}" class="admin-menu-link">📞 Phone, Socials & Info</a></li>
+      <li><a href="{{ url_for('admin.manage_tech_stack') }}" class="admin-menu-link">🌐 3D Tech Orbit</a></li>
+      <li><a href="{{ url_for('admin.manage_messages') }}" class="admin-menu-link">📬 Contact Inbox</a></li>
+      <li><a href="{{ url_for('admin.manage_theme') }}" class="admin-menu-link">🎨 Theme & Animation</a></li>
+      <li><a href="{{ url_for('admin.manage_media') }}" class="admin-menu-link">🖼️ Media Library</a></li>
+      <li style="margin-top: auto;"><a href="{{ url_for('auth.logout') }}" class="admin-menu-link" style="color: #EF4444;">🚪 Logout</a></li>
+    </ul>
+  </aside>
+
+  <main class="admin-main">
+    <header class="admin-header">
+      <h1 class="admin-title">Hero Section CMS</h1>
+    </header>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for cat, msg in messages %}
+          <div style="padding: 12px; background: rgba(16,185,129,0.2); border: 1px solid #10B981; color: #fff; border-radius: 8px; margin-bottom: 24px;">✓ {{ msg }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div class="admin-card">
+      <form method="POST" action="{{ url_for('admin.manage_hero') }}">
+        <div class="form-group">
+          <label class="form-label">Hero Badge Tagline</label>
+          <input type="text" name="badge_text" class="form-input" value="{{ hero.badge_text }}">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Main Headline *</label>
+          <input type="text" name="headline" class="form-input" value="{{ hero.headline }}" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Subheadline Narrative *</label>
+          <textarea name="subheadline" class="form-textarea" required>{{ hero.subheadline }}</textarea>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+          <div class="form-group">
+            <label class="form-label">Primary Button Text</label>
+            <input type="text" name="cta_primary_text" class="form-input" value="{{ hero.cta_primary_text }}">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Primary Button Target Anchor</label>
+            <input type="text" name="cta_primary_link" class="form-input" value="{{ hero.cta_primary_link }}">
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+          <div class="form-group">
+            <label class="form-label">Secondary Button Text</label>
+            <input type="text" name="cta_secondary_text" class="form-input" value="{{ hero.cta_secondary_text }}">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Secondary Button Target Anchor</label>
+            <input type="text" name="cta_secondary_link" class="form-input" value="{{ hero.cta_secondary_link }}">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">3D Matrix Floating Python Code Snippet</label>
+          <textarea name="python_code_lines" class="form-textarea" style="font-family: 'JetBrains Mono'; height: 180px;">{{ hero_code }}</textarea>
+        </div>
+
+        <button type="submit" class="btn-primary">Update Hero Section 💾</button>
+      </form>
+    </div>
+  </main>
+</body>
+</html>

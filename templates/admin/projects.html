@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>JS CodeWorks | Manage Projects</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+<body class="admin-body">
+  <aside class="admin-sidebar">
+    <div class="admin-logo"><span style="color: var(--secondary);">JS</span> CODEWORKS</div>
+    <ul class="admin-menu">
+      <li><a href="{{ url_for('admin.dashboard') }}" class="admin-menu-link">📊 Dashboard</a></li>
+      <li><a href="{{ url_for('admin.manage_hero') }}" class="admin-menu-link">🚀 Hero Section</a></li>
+      <li><a href="{{ url_for('admin.manage_about') }}" class="admin-menu-link">ℹ️ About Studio</a></li>
+      <li><a href="{{ url_for('admin.manage_team') }}" class="admin-menu-link">👥 Founders & Team</a></li>
+      <li><a href="{{ url_for('admin.manage_services') }}" class="admin-menu-link">⚙️ Services Manager</a></li>
+      <li><a href="{{ url_for('admin.manage_projects') }}" class="admin-menu-link active">📁 Projects Manager</a></li>
+      <li><a href="{{ url_for('admin.manage_stats') }}" class="admin-menu-link">📈 Stats & Counter Rollup</a></li>
+      <li><a href="{{ url_for('admin.manage_contact_settings') }}" class="admin-menu-link">📞 Phone, Socials & Info</a></li>
+      <li><a href="{{ url_for('admin.manage_tech_stack') }}" class="admin-menu-link">🌐 3D Tech Orbit</a></li>
+      <li><a href="{{ url_for('admin.manage_messages') }}" class="admin-menu-link">📬 Contact Inbox</a></li>
+      <li><a href="{{ url_for('admin.manage_theme') }}" class="admin-menu-link">🎨 Theme & Animation</a></li>
+      <li><a href="{{ url_for('admin.manage_media') }}" class="admin-menu-link">🖼️ Media Library</a></li>
+      <li style="margin-top: auto;"><a href="{{ url_for('auth.logout') }}" class="admin-menu-link" style="color: #EF4444;">🚪 Logout</a></li>
+    </ul>
+  </aside>
+
+  <main class="admin-main">
+    <header class="admin-header">
+      <h1 class="admin-title">Portfolio Projects Manager</h1>
+    </header>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for cat, msg in messages %}
+          <div style="padding: 12px; background: rgba(16,185,129,0.2); border: 1px solid #10B981; color: #fff; border-radius: 8px; margin-bottom: 24px;">✓ {{ msg }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div class="admin-card">
+      <h3 style="font-family: 'Space Grotesk'; margin-bottom: 20px;">Add New Portfolio Project</h3>
+      <form method="POST" action="{{ url_for('admin.manage_projects') }}">
+        <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 20px;">
+          <div class="form-group">
+            <label class="form-label">Project Title *</label>
+            <input type="text" name="title" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Category</label>
+            <input type="text" name="category" class="form-input" placeholder="Web, Mobile, AI, SaaS">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Device 3D Frame</label>
+            <select name="device_type" class="form-select">
+              <option value="desktop">3D Desktop</option>
+              <option value="laptop" selected>3D Laptop</option>
+              <option value="mobile">3D Mobile Phone</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Tagline Summary *</label>
+          <input type="text" name="tagline" class="form-input" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Cover / Screenshot Image URL *</label>
+          <input type="text" name="image_url" class="form-input" placeholder="https://images.unsplash.com/..." required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Tech Stack Tags (comma separated)</label>
+          <input type="text" name="tech_stack" class="form-input" placeholder="Python, Flask, React, Docker, AWS">
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+          <div class="form-group">
+            <label class="form-label">Live Demo URL</label>
+            <input type="text" name="live_url" class="form-input" value="https://jscodeworks.com">
+          </div>
+          <div class="form-group">
+            <label class="form-label">GitHub Repository URL</label>
+            <input type="text" name="github_url" class="form-input" value="https://github.com">
+          </div>
+        </div>
+
+        <button type="submit" class="btn-primary">Save Portfolio Project 💾</button>
+      </form>
+    </div>
+
+    <!-- Existing Projects List -->
+    <div class="admin-card">
+      <h3 style="font-family: 'Space Grotesk'; margin-bottom: 20px;">Existing Projects</h3>
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Thumbnail</th>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Tagline</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in projects %}
+          <tr>
+            <td><img src="{{ p.image_url }}" alt="{{ p.title }}" style="width: 60px; height: 40px; object-fit: cover; border-radius: 4px;"></td>
+            <td style="font-weight: 600;">{{ p.title }}</td>
+            <td><span class="tech-tag">{{ p.category }}</span></td>
+            <td style="color: #94A3B8; max-width: 250px;">{{ p.tagline }}</td>
+            <td>
+              <form method="POST" action="{{ url_for('admin.delete_project', project_id=p.id) }}" style="display: inline;" onsubmit="return confirm('Delete project?');">
+                <button type="submit" class="admin-btn btn-danger">Delete</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+  </main>
+</body>
+</html>

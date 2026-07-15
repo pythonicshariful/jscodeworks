@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>JS CodeWorks | Manage Contact & Social Links</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+<body class="admin-body">
+  <aside class="admin-sidebar">
+    <div class="admin-logo"><span style="color: var(--secondary);">JS</span> CODEWORKS</div>
+    <ul class="admin-menu">
+      <li><a href="{{ url_for('admin.dashboard') }}" class="admin-menu-link">📊 Dashboard</a></li>
+      <li><a href="{{ url_for('admin.manage_hero') }}" class="admin-menu-link">🚀 Hero Section</a></li>
+      <li><a href="{{ url_for('admin.manage_about') }}" class="admin-menu-link">ℹ️ About Studio</a></li>
+      <li><a href="{{ url_for('admin.manage_team') }}" class="admin-menu-link">👥 Founders & Team</a></li>
+      <li><a href="{{ url_for('admin.manage_services') }}" class="admin-menu-link">⚙️ Services Manager</a></li>
+      <li><a href="{{ url_for('admin.manage_projects') }}" class="admin-menu-link">📁 Projects Manager</a></li>
+      <li><a href="{{ url_for('admin.manage_stats') }}" class="admin-menu-link">📈 Stats & Counter Rollup</a></li>
+      <li><a href="{{ url_for('admin.manage_contact_settings') }}" class="admin-menu-link active">📞 Phone, Socials & Info</a></li>
+      <li><a href="{{ url_for('admin.manage_tech_stack') }}" class="admin-menu-link">🌐 3D Tech Orbit</a></li>
+      <li><a href="{{ url_for('admin.manage_messages') }}" class="admin-menu-link">📬 Contact Inbox</a></li>
+      <li><a href="{{ url_for('admin.manage_theme') }}" class="admin-menu-link">🎨 Theme & Animation</a></li>
+      <li><a href="{{ url_for('admin.manage_media') }}" class="admin-menu-link">🖼️ Media Library</a></li>
+      <li style="margin-top: auto;"><a href="{{ url_for('auth.logout') }}" class="admin-menu-link" style="color: #EF4444;">🚪 Logout</a></li>
+    </ul>
+  </aside>
+
+  <main class="admin-main">
+    <header class="admin-header">
+      <h1 class="admin-title">Contact Channels & Social Media Settings</h1>
+    </header>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for cat, msg in messages %}
+          <div style="padding: 12px; background: rgba(16,185,129,0.2); border: 1px solid #10B981; color: #fff; border-radius: 8px; margin-bottom: 24px;">✓ {{ msg }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div class="admin-card">
+      <form method="POST" action="{{ url_for('admin.manage_contact_settings') }}">
+        <h3 style="font-family: 'Space Grotesk'; margin-bottom: 20px; color: var(--secondary);">Direct Communication Channels</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 24px;">
+          <div class="form-group">
+            <label class="form-label">Official Business Email</label>
+            <input type="email" name="email" class="form-input" value="{{ contact.email }}" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Phone Number</label>
+            <input type="text" name="phone" class="form-input" value="{{ contact.phone }}">
+          </div>
+          <div class="form-group">
+            <label class="form-label">WhatsApp Direct Number (with country code)</label>
+            <input type="text" name="whatsapp_number" class="form-input" value="{{ contact.whatsapp_number }}" placeholder="+8801700000000">
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 32px;">
+          <label class="form-label">Global Headquarters Address</label>
+          <textarea name="office_address" class="form-textarea">{{ contact.office_address }}</textarea>
+        </div>
+
+        <h3 style="font-family: 'Space Grotesk'; margin-bottom: 20px; color: var(--secondary);">Company Social Media Profiles</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 28px;">
+          <div class="form-group">
+            <label class="form-label">GitHub Organization URL</label>
+            <input type="text" name="github_url" class="form-input" value="{{ contact.github_url }}">
+          </div>
+          <div class="form-group">
+            <label class="form-label">LinkedIn Company Page URL</label>
+            <input type="text" name="linkedin_url" class="form-input" value="{{ contact.linkedin_url }}">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Twitter / X Profile URL</label>
+            <input type="text" name="twitter_url" class="form-input" value="{{ contact.twitter_url }}">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Facebook Page URL</label>
+            <input type="text" name="facebook_url" class="form-input" value="{{ contact.facebook_url }}">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Instagram Profile URL</label>
+            <input type="text" name="instagram_url" class="form-input" value="{{ contact.instagram_url }}">
+          </div>
+        </div>
+
+        <button type="submit" class="btn-primary">Save Contact & Social Profiles 💾</button>
+      </form>
+    </div>
+
+  </main>
+</body>
+</html>

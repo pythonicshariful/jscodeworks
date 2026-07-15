@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>JS CodeWorks | Manage 3D Tech Orbit</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+<body class="admin-body">
+  <aside class="admin-sidebar">
+    <div class="admin-logo"><span style="color: var(--secondary);">JS</span> CODEWORKS</div>
+    <ul class="admin-menu">
+      <li><a href="{{ url_for('admin.dashboard') }}" class="admin-menu-link">📊 Dashboard</a></li>
+      <li><a href="{{ url_for('admin.manage_hero') }}" class="admin-menu-link">🚀 Hero Section</a></li>
+      <li><a href="{{ url_for('admin.manage_about') }}" class="admin-menu-link">ℹ️ About Studio</a></li>
+      <li><a href="{{ url_for('admin.manage_team') }}" class="admin-menu-link">👥 Founders & Team</a></li>
+      <li><a href="{{ url_for('admin.manage_services') }}" class="admin-menu-link">⚙️ Services Manager</a></li>
+      <li><a href="{{ url_for('admin.manage_projects') }}" class="admin-menu-link">📁 Projects Manager</a></li>
+      <li><a href="{{ url_for('admin.manage_stats') }}" class="admin-menu-link">📈 Stats & Counter Rollup</a></li>
+      <li><a href="{{ url_for('admin.manage_contact_settings') }}" class="admin-menu-link">📞 Phone, Socials & Info</a></li>
+      <li><a href="{{ url_for('admin.manage_tech_stack') }}" class="admin-menu-link active">🌐 3D Tech Orbit</a></li>
+      <li><a href="{{ url_for('admin.manage_messages') }}" class="admin-menu-link">📬 Contact Inbox</a></li>
+      <li><a href="{{ url_for('admin.manage_theme') }}" class="admin-menu-link">🎨 Theme & Animation</a></li>
+      <li><a href="{{ url_for('admin.manage_media') }}" class="admin-menu-link">🖼️ Media Library</a></li>
+      <li style="margin-top: auto;"><a href="{{ url_for('auth.logout') }}" class="admin-menu-link" style="color: #EF4444;">🚪 Logout</a></li>
+    </ul>
+  </aside>
+
+  <main class="admin-main">
+    <header class="admin-header">
+      <h1 class="admin-title">3D Tech Orbit Cloud Manager</h1>
+    </header>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for cat, msg in messages %}
+          <div style="padding: 12px; background: rgba(16,185,129,0.2); border: 1px solid #10B981; color: #fff; border-radius: 8px; margin-bottom: 24px;">✓ {{ msg }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div class="admin-card">
+      <h3 style="font-family: 'Space Grotesk'; margin-bottom: 20px;">Add Tech Item to 3D Orbit</h3>
+      <form method="POST" action="{{ url_for('admin.manage_tech_stack') }}">
+        <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 20px;">
+          <div class="form-group">
+            <label class="form-label">Technology Name *</label>
+            <input type="text" name="name" class="form-input" placeholder="e.g. Python, Docker, PyTorch" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Category</label>
+            <input type="text" name="category" class="form-input" value="Backend">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Glow Color</label>
+            <input type="color" name="color" class="form-input" value="#06B6D4">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Orbit Radius</label>
+            <input type="number" step="0.1" name="orbit_radius" class="form-input" value="3.5">
+          </div>
+        </div>
+
+        <button type="submit" class="btn-primary">Add to 3D Sphere 🌐</button>
+      </form>
+    </div>
+
+    <div class="admin-card">
+      <h3 style="font-family: 'Space Grotesk'; margin-bottom: 20px;">Orbiting Technologies</h3>
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Color</th>
+            <th>Orbit Radius</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for t in tech_items %}
+          <tr>
+            <td style="font-weight: 600;">{{ t.name }}</td>
+            <td><span class="tech-tag">{{ t.category }}</span></td>
+            <td><div style="width: 20px; height: 20px; background: {{ t.color }}; border-radius: 50%;"></div></td>
+            <td>{{ t.orbit_radius }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </main>
+</body>
+</html>
