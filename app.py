@@ -91,10 +91,15 @@ def create_app():
 app = create_app()
 
 if __name__ == '__main__':
+    host = os.getenv('HOST', '0.0.0.0')
+    port = int(os.getenv('PORT', 5000))
+    debug = os.getenv('FLASK_ENV', 'development') == 'development'
+
     print("=========================================================")
     print("JS CodeWorks Web Application & Dynamic CMS Starting...")
-    print("Public Landing Showcase: http://127.0.0.1:5000")
-    print("Admin CMS Panel:         http://127.0.0.1:5000/admin")
-    print("Default Admin Login:     Username: admin | Password: admin123")
+    print(f"Global Network Endpoint: http://0.0.0.0:{port}")
+    print(f"Local Server Showcase:   http://127.0.0.1:{port}")
+    print(f"Secret Admin Portal:     http://127.0.0.1:{port}/admin/darkwolf")
     print("=========================================================")
-    app.run(debug=True, host='127.0.0.1', port=5000)
+
+    app.run(host='0.0.0.0', port=port, debug=debug)
