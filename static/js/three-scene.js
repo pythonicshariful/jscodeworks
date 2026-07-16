@@ -1,252 +1,147 @@
-/* Three.js Futuristic 3D Developer Workspace Canvas */
-(function() {
+/**
+ * JS CodeWorks - Hero Section 3D Workspace Scene
+ * Performance Optimized with IntersectionObserver & Mobile Frame Scaling
+ */
+
+(function () {
   const container = document.getElementById('canvas-3d-workspace');
-  if (!container || typeof THREE === 'undefined') return;
+  if (!container) return;
 
-  let scene, camera, renderer, particlesMesh, codeCanvasTexture, codeCtx, codeCanvas;
-  let logoImg = null;
-  let mouseX = 0, mouseY = 0;
+  const isMobile = window.innerWidth < 768 || ('ontouchstart' in window);
+  const dpr = Math.min(window.devicePixelRatio || 1, isMobile ? 1.2 : 2);
 
-  // Real-time live code typing variables
-  const codeLines = [
-    "class JSCodeWorksEngine:",
-    "    def __init__(self):",
-    "        self.status = 'INITIALIZED'",
-    "        self.founders = ['Jahidur Islam', 'Shariful Islam']",
-    "        self.capabilities = ['AI', 'Cloud', 'Web', 'Mobile']",
-    "",
-    "    def deploy_world_class(self, client_idea):",
-    "        product = self.compile_solution(client_idea)",
-    "        return product.scale(to='infinity')",
-    "",
-    "engine = JSCodeWorksEngine()",
-    "engine.deploy_world_class('Your Dream Software')"
-  ];
-  let currentLineIdx = 0;
-  let currentCharIdx = 0;
-  let displayedLines = [""];
+  let isVisible = false;
+  let stopAnimation = null;
 
-  function init() {
-    // 1. Scene setup
-    scene = new THREE.Scene();
-    scene.fog = new THREE.FogExp2(0x050816, 0.08);
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      isVisible = entry.isIntersecting;
+      if (isVisible && !stopAnimation) {
+        stopAnimation = initHero3D();
+      } else if (!isVisible && stopAnimation) {
+        stopAnimation();
+        stopAnimation = null;
+      }
+    });
+  }, { threshold: 0.05 });
 
-    // 2. Camera setup
-    camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
-    camera.position.set(0, 5, 12);
+  observer.observe(container);
 
-    // 3. Renderer setup
-    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.2;
+  function initHero3D() {
+    const width = container.clientWidth || window.innerWidth;
+    const height = container.clientHeight || window.innerHeight;
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
+    camera.position.set(0, 1.2, isMobile ? 8.5 : 7);
+
+    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: !isMobile });
+    renderer.setSize(width, height);
+    renderer.setPixelRatio(dpr);
     container.appendChild(renderer.domElement);
 
-    // 4. Lighting
-    const ambientLight = new THREE.AmbientLight(0x1e293b, 1.5);
-    scene.add(ambientLight);
+    // Grid Floor
+    const gridHelper = new THREE.GridHelper(isMobile ? 16 : 24, isMobile ? 16 : 24, 0x06B6D4, 0x1E293B);
+    gridHelper.position.y = -2.2;
+    gridHelper.material.transparent = true;
+    gridHelper.material.opacity = 0.4;
+    scene.add(gridHelper);
 
-    const blueSpotLight = new THREE.SpotLight(0x2563EB, 4, 20, Math.PI / 4);
-    blueSpotLight.position.set(-4, 6, 4);
-    scene.add(blueSpotLight);
-
-    const cyanSpotLight = new THREE.SpotLight(0x06B6D4, 5, 20, Math.PI / 4);
-    cyanSpotLight.position.set(4, 5, 4);
-    scene.add(cyanSpotLight);
-
-    const purplePointLight = new THREE.PointLight(0x7C3AED, 3, 15);
-    purplePointLight.position.set(0, 2, -2);
-    scene.add(purplePointLight);
-
-    // 5. Load Logo Image object for Monitor Canvas
-    logoImg = new Image();
-    logoImg.src = '/static/images/logo.png';
-    logoImg.onload = () => {
-      if (codeCanvasTexture) codeCanvasTexture.needsUpdate = true;
-    };
-
-    // 6. Dynamic Code Canvas Texture
-    codeCanvas = document.createElement('canvas');
-    codeCanvas.width = 1024;
-    codeCanvas.height = 512;
-    codeCtx = codeCanvas.getContext('2d');
-    codeCanvasTexture = new THREE.CanvasTexture(codeCanvas);
-    updateCodeCanvas();
-
-    // 7. Build Workspace (Clean 3D Scene - no floating giant plane overlay)
-    buildWorkspace();
-
-    // 8. Floating Particle Systems
-    buildParticles();
-
-    // 9. Event Listeners
-    window.addEventListener('resize', onWindowResize);
-    document.addEventListener('mousemove', onMouseMove);
-
-    // 10. Intro Camera Animation Sequence
-    gsap.to(camera.position, {
-      x: 0,
-      y: 1.8,
-      z: 6,
-      duration: 2.5,
-      ease: "power3.inOut"
-    });
-
-    animate();
-  }
-
-  function buildWorkspace() {
-    // Desk Surface
-    const deskGeo = new THREE.BoxGeometry(6, 0.15, 2.5);
-    const deskMat = new THREE.MeshStandardMaterial({
-      color: 0x0f172a,
-      roughness: 0.2,
-      metalness: 0.8
-    });
-    const desk = new THREE.Mesh(deskGeo, deskMat);
-    desk.position.set(0, 0, 0);
-    scene.add(desk);
-
-    // Main Curved Monitor Screen
-    const monitorMat = new THREE.MeshBasicMaterial({ map: codeCanvasTexture });
-    const screenGeo = new THREE.PlaneGeometry(3.6, 2.0);
-    const centerScreen = new THREE.Mesh(screenGeo, monitorMat);
-    centerScreen.position.set(0, 1.45, -0.2);
-    scene.add(centerScreen);
-
-    // Monitor Frame
-    const frameGeo = new THREE.BoxGeometry(3.7, 2.1, 0.1);
-    const frameMat = new THREE.MeshStandardMaterial({ color: 0x030712, roughness: 0.4 });
-    const frame = new THREE.Mesh(frameGeo, frameMat);
-    frame.position.set(0, 1.45, -0.26);
-    scene.add(frame);
-
-    // Side Monitor (Angled Left)
-    const sideScreenGeo = new THREE.PlaneGeometry(2.0, 1.4);
-    const sideMat = new THREE.MeshBasicMaterial({ color: 0x060b1e });
-    const leftScreen = new THREE.Mesh(sideScreenGeo, sideMat);
-    leftScreen.position.set(-2.5, 1.35, 0.3);
-    leftScreen.rotation.y = 0.4;
-    scene.add(leftScreen);
-
-    // Neon Glow Line on Desk Edge
-    const edgeGeo = new THREE.BoxGeometry(6.1, 0.04, 0.04);
-    const edgeMat = new THREE.MeshBasicMaterial({ color: 0x06B6D4 });
-    const edge = new THREE.Mesh(edgeGeo, edgeMat);
-    edge.position.set(0, 0.08, 1.24);
-    scene.add(edge);
-  }
-
-  function buildParticles() {
-    const particleCount = 200;
-    const geometry = new THREE.BufferGeometry();
-    const positions = new Float32Array(particleCount * 3);
-
-    for (let i = 0; i < particleCount * 3; i += 3) {
-      positions[i] = (Math.random() - 0.5) * 15;
-      positions[i + 1] = Math.random() * 8;
-      positions[i + 2] = (Math.random() - 0.5) * 15;
-    }
-
-    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    const material = new THREE.PointsMaterial({
+    // Floating Cyber Node Core
+    const coreGroup = new THREE.Group();
+    const coreGeo = new THREE.IcosahedronGeometry(isMobile ? 1.2 : 1.6, 1);
+    const coreMat = new THREE.MeshBasicMaterial({
       color: 0x06B6D4,
-      size: 0.04,
+      wireframe: true,
+      transparent: true,
+      opacity: 0.45
+    });
+    const coreMesh = new THREE.Mesh(coreGeo, coreMat);
+    coreGroup.add(coreMesh);
+
+    // Inner Glowing Core
+    const innerGeo = new THREE.OctahedronGeometry(isMobile ? 0.7 : 0.9, 0);
+    const innerMat = new THREE.MeshBasicMaterial({
+      color: 0x2563EB,
+      wireframe: true,
       transparent: true,
       opacity: 0.7
     });
+    const innerMesh = new THREE.Mesh(innerGeo, innerMat);
+    coreGroup.add(innerMesh);
 
-    particlesMesh = new THREE.Points(geometry, material);
-    scene.add(particlesMesh);
-  }
+    scene.add(coreGroup);
 
-  function updateCodeCanvas() {
-    if (!codeCtx) return;
-    codeCtx.fillStyle = '#050a1c';
-    codeCtx.fillRect(0, 0, 1024, 512);
-
-    // Header bar inside monitor
-    codeCtx.fillStyle = '#0f172a';
-    codeCtx.fillRect(0, 0, 1024, 40);
-
-    // Draw small icon logo inside the code editor header bar
-    if (logoImg && logoImg.complete && logoImg.naturalWidth !== 0) {
-      try {
-        codeCtx.drawImage(logoImg, 20, 6, 28, 28);
-      } catch (e) {}
+    // Orbiting Particles Cloud
+    const particleCount = isMobile ? 50 : 150;
+    const particleGeo = new THREE.BufferGeometry();
+    const positions = new Float32Array(particleCount * 3);
+    for (let i = 0; i < particleCount * 3; i += 3) {
+      positions[i] = (Math.random() - 0.5) * (isMobile ? 8 : 14);
+      positions[i + 1] = (Math.random() - 0.5) * 8;
+      positions[i + 2] = (Math.random() - 0.5) * 10;
     }
-
-    codeCtx.fillStyle = '#94a3b8';
-    codeCtx.font = 'bold 16px "JetBrains Mono"';
-    codeCtx.fillText("JS CODEWORKS - main.py", 60, 26);
-
-    // Window controls
-    codeCtx.fillStyle = '#ef4444'; codeCtx.beginPath(); codeCtx.arc(960, 20, 6, 0, Math.PI*2); codeCtx.fill();
-    codeCtx.fillStyle = '#f59e0b'; codeCtx.beginPath(); codeCtx.arc(980, 20, 6, 0, Math.PI*2); codeCtx.fill();
-    codeCtx.fillStyle = '#10b981'; codeCtx.beginPath(); codeCtx.arc(1000, 20, 6, 0, Math.PI*2); codeCtx.fill();
-
-    // Render code text lines
-    codeCtx.font = '20px "JetBrains Mono"';
-    codeCtx.fillStyle = '#10b981';
-    let y = 80;
-    displayedLines.forEach(line => {
-      codeCtx.fillText(line, 40, y);
-      y += 32;
+    particleGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    const particleMat = new THREE.PointsMaterial({
+      size: isMobile ? 0.05 : 0.03,
+      color: 0x06B6D4,
+      transparent: true,
+      opacity: 0.65
     });
+    const particles = new THREE.Points(particleGeo, particleMat);
+    scene.add(particles);
 
-    if (codeCanvasTexture) codeCanvasTexture.needsUpdate = true;
-  }
+    // Smooth Mouse Interaction
+    let mouseX = 0;
+    let mouseY = 0;
+    let targetX = 0;
+    let targetY = 0;
 
-  function stepCodeTyping() {
-    if (currentLineIdx < codeLines.length) {
-      const fullLine = codeLines[currentLineIdx];
-      if (currentCharIdx < fullLine.length) {
-        displayedLines[displayedLines.length - 1] += fullLine[currentCharIdx];
-        currentCharIdx++;
-      } else {
-        currentLineIdx++;
-        currentCharIdx = 0;
-        if (currentLineIdx < codeLines.length) {
-          displayedLines.push("");
-        }
+    function onMouseMove(e) {
+      if (isMobile) return;
+      mouseX = (e.clientX - window.innerWidth / 2) * 0.0003;
+      mouseY = (e.clientY - window.innerHeight / 2) * 0.0003;
+    }
+    window.addEventListener('mousemove', onMouseMove);
+
+    let animId = null;
+    function animate() {
+      animId = requestAnimationFrame(animate);
+
+      targetX += (mouseX - targetX) * 0.05;
+      targetY += (mouseY - targetY) * 0.05;
+
+      coreGroup.rotation.y += 0.004;
+      coreGroup.rotation.x += 0.002;
+      innerMesh.rotation.y -= 0.008;
+
+      particles.rotation.y += 0.001;
+
+      camera.position.x = targetX * 3;
+      camera.position.y = 1.2 + (-targetY * 3);
+      camera.lookAt(0, 0, 0);
+
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    function onResize() {
+      const w = container.clientWidth || window.innerWidth;
+      const h = container.clientHeight || window.innerHeight;
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      renderer.setSize(w, h);
+    }
+    window.addEventListener('resize', onResize);
+
+    return function cleanup() {
+      if (animId) cancelAnimationFrame(animId);
+      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('resize', onResize);
+      if (renderer.domElement && renderer.domElement.parentNode) {
+        renderer.domElement.parentNode.removeChild(renderer.domElement);
       }
-    } else {
-      setTimeout(() => {
-        currentLineIdx = 0;
-        currentCharIdx = 0;
-        displayedLines = [""];
-      }, 3000);
-    }
-    updateCodeCanvas();
+      renderer.dispose();
+    };
   }
-
-  setInterval(stepCodeTyping, 45);
-
-  function onMouseMove(event) {
-    mouseX = (event.clientX / window.innerWidth - 0.5) * 2;
-    mouseY = (event.clientY / window.innerHeight - 0.5) * 2;
-  }
-
-  function onWindowResize() {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-  }
-
-  function animate() {
-    requestAnimationFrame(animate);
-
-    camera.position.x += (mouseX * 0.8 - camera.position.x) * 0.05;
-    camera.position.y += (1.8 - mouseY * 0.4 - camera.position.y) * 0.05;
-    camera.lookAt(0, 1.4, 0);
-
-    if (particlesMesh) {
-      particlesMesh.rotation.y += 0.0005;
-    }
-
-    renderer.render(scene, camera);
-  }
-
-  window.addEventListener('load', init);
 })();

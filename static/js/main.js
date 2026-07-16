@@ -1,5 +1,22 @@
 /* Main JavaScript Application Logic */
 document.addEventListener('DOMContentLoaded', () => {
+  // Mobile Navigation Drawer Toggle Handler
+  const mobileToggle = document.querySelector('.mobile-nav-toggle');
+  const navLinks = document.querySelector('.nav-links');
+
+  if (mobileToggle && navLinks) {
+    mobileToggle.addEventListener('click', () => {
+      mobileToggle.classList.toggle('active');
+      navLinks.classList.toggle('active');
+    });
+
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileToggle.classList.remove('active');
+        navLinks.classList.remove('active');
+      });
+    });
+  }
   // 1. Loading Intro Screen Handler
   const loader = document.getElementById('loader-screen');
   const progressFill = document.querySelector('.loader-progress-fill');
